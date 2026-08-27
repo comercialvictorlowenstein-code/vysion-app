@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>VYSION | O Futuro da Vistoria</title>
+  
+  <!-- Fontes Apple / SF Pro, Montserrat e Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  
+  <!-- Design System VYSION Opal Glass (Cache-Busted) -->
+  <link rel="stylesheet" href="style.css?v=50.0">
+  <script>
+    try {
+      localStorage.setItem('vysion_theme', 'light');
+      document.documentElement.classList.add('light-theme');
+    } catch(e) {}
+  </script>
+</head>
+<body class="light-theme">
+  <!-- Efeito de Ruído Procedural Global (Film Grain Noise) -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+  
+  <!-- Glows e Iluminação Ambiente -->
+  <div class="ambient-glow glow-top" aria-hidden="true"></div>
+  <div class="ambient-glow glow-bottom" aria-hidden="true"></div>
+
+  <!-- Container Mobile Centralizado com Moldura Apple -->
+  <div class="mobile-container">
+    
+    <!-- Topbar Unificada em Cápsula de Vidro Líquido Opal -->
+    <header class="vysion-topbar" id="vysionTopbar">
+      <div class="topbar-glass-pill">
+        <div class="topbar-brand">
+          <img src="assets/logo.png" alt="VYSION" class="topbar-logo">
+        </div>
+        <div class="step-indicator" id="stepIndicator">
+          <span class="step-dot" data-step="1"></span>
+          <span class="step-dot" data-step="2"></span>
+          <span class="step-dot" data-step="3"></span>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" class="topbar-tool-btn" id="btnRestartFlow" title="Reiniciar do Início">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Palco Principal de Transições de Cena -->
+    <main class="vysion-viewport">
+      
+      <!-- ==========================================
+           CENA 1: "Olá, Victor" (Apple Cinematic Reveal)
+           ========================================== -->
+      <section class="scene scene-cinema" id="sceneOla">
+        <div class="cinema-content">
+          <h1 class="cinema-title">Olá, <span id="userNameDisplay">Victor</span></h1>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           CENA 2: "antes de prosseguir"
+           ========================================== -->
+      <section class="scene scene-cinema" id="sceneAntes">
+        <div class="cinema-content">
+          <h1 class="cinema-title cinema-subtitle">antes de prosseguir</h1>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           CENA 3: "Prepare o veículo" (Requisitos Agrupados Opal)
+           ========================================== -->
+      <section class="scene scene-card-stage" id="sceneRequisitos">
+        <div class="stage-header">
+          <h2 class="stage-title">Prepare o veículo</h2>
+        </div>
+
+        <!-- Card Único Agrupado em Vidro Opal -->
+        <div class="unified-glass-card">
+          
+          <div class="card-row-item">
+            <div class="req-icon-box">
+              <i class="bi bi-brightness-high"></i>
+            </div>
+            <div class="req-info">
+              <h3>Local iluminado</h3>
+              <p>Evite garagem escura e luz contra a câmera.</p>
+            </div>
+          </div>
+
+          <div class="glass-row-divider"></div>
+
+          <div class="card-row-item">
+            <div class="req-icon-box">
+              <i class="bi bi-arrows-fullscreen"></i>
+            </div>
+            <div class="req-info">
+              <h3>Espaço ao redor</h3>
+              <p>Deixe distância para fotografar o veículo inteiro.</p>
+            </div>
+          </div>
+
+          <div class="glass-row-divider"></div>
+
+          <div class="card-row-item">
+            <div class="req-icon-box">
+              <i class="bi bi-camera"></i>
+            </div>
+            <div class="req-info">
+              <h3>Lente limpa</h3>
+              <p>Uma passada rápida evita fotos embaçadas.</p>
+            </div>
+          </div>
+
+          <div class="glass-row-divider"></div>
+
+          <div class="card-row-item">
+            <div class="req-icon-box">
+              <i class="bi bi-geo-alt"></i>
+            </div>
+            <div class="req-info">
+              <h3>Localização ativa</h3>
+              <p>Usamos local e horário para validar a sequência.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="stage-footer">
+          <button type="button" class="vysion-btn btn-opal-primary" id="btnProsseguir">
+            <span>Prosseguir</span>
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           CENA 4: "Confirme seus dados" (Formulário Agrupado Opal)
+           ========================================== -->
+      <section class="scene scene-card-stage" id="sceneDados">
+        <div class="stage-header">
+          <h2 class="stage-title">Confirme seus dados</h2>
+        </div>
+
+        <form class="glass-form-unified" id="vysionForm" autocomplete="off">
+          
+          <!-- Card Único Agrupado de Formulário em Vidro Opal -->
+          <div class="unified-glass-card">
+            
+            <div class="form-field-row">
+              <label for="inputNome">Seu nome</label>
+              <div class="field-input-wrap">
+                <i class="bi bi-person field-icon"></i>
+                <input type="text" id="inputNome" placeholder="Digite seu nome completo" value="William Victor Lowenstein de Barros" required>
+              </div>
+            </div>
+
+            <div class="glass-row-divider"></div>
+
+            <div class="form-field-row">
+              <label for="inputPlaca">Placa do veículo</label>
+              <div class="field-input-wrap">
+                <i class="bi bi-car-front field-icon"></i>
+                <input type="text" id="inputPlaca" placeholder="ABC1D23" value="ELE7D94" maxlength="8" required>
+              </div>
+            </div>
+
+            <div class="glass-row-divider"></div>
+
+            <div class="form-field-row">
+              <label for="inputWhatsapp">WhatsApp</label>
+              <div class="field-input-wrap">
+                <i class="bi bi-whatsapp field-icon"></i>
+                <input type="tel" id="inputWhatsapp" placeholder="(00) 00000-0000" value="(81) 99533-0683" maxlength="15" required>
+              </div>
+            </div>
+
+            <div class="glass-row-divider"></div>
+
+            <div class="form-field-row">
+              <label for="inputCpf">CPF para assinatura</label>
+              <div class="field-input-wrap">
+                <i class="bi bi-shield-lock field-icon"></i>
+                <input type="text" id="inputCpf" placeholder="000.000.000-00" value="000.000.000-00" maxlength="14" required>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="stage-footer">
+            <button type="submit" class="vysion-btn btn-opal-primary" id="btnIniciarVistoria">
+              <span>Iniciar vistoria</span>
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ==========================================
+           CENA 5: Reveal Triunfal da Logo VYSION
+           ========================================== -->
+      <section class="scene scene-reveal" id="sceneReveal">
+        <div class="reveal-content">
+          <div class="logo-glow-wrapper">
+            <img src="assets/logo.png" alt="VYSION" class="reveal-logo">
+            <div class="logo-shimmer"></div>
+          </div>
+          <div class="reveal-loader">
+            <div class="loader-bar"></div>
+          </div>
+          <p class="reveal-status" id="revealStatus">Inicializando ambiente de vistoria...</p>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           CENA 6: Câmera Minimalista Apple (Anel Circular de Progresso & Apple Shutter)
+           ========================================== -->
+      <section class="scene scene-fullscreen-camera" id="sceneWorkspace">
+        
+        <!-- Topo Minimalista Apple: Título em Montserrat & Anel Circular de Progresso -->
+        <div class="cam-top-overlay">
+          <div class="cam-top-header-glass">
+            <h2 class="cam-step-title-text" id="workspaceStepTitle">Frente do Veículo</h2>
+            
+            <!-- Círculo de Progresso Apple (Borda Branca que vai ficando Verde) -->
+            <div class="cam-progress-ring-wrap" title="Progresso das Fotos">
+              <svg class="cam-progress-svg" viewBox="0 0 36 36">
+                <!-- Círculo de fundo branco translúcido -->
+                <circle class="ring-bg" cx="18" cy="18" r="14" />
+                <!-- Arco de progresso verde animado -->
+                <circle class="ring-progress" id="ringProgress" cx="18" cy="18" r="14" />
+              </svg>
+              <span class="ring-counter-text" id="ringStepText">1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Palco do Viewfinder da Câmera (Visor Limpo) -->
+        <div class="fullscreen-viewfinder" id="cameraStage">
+          <!-- Feed de Imagem Realista de Recife / Veículo -->
+          <div class="camera-feed-bg" id="cameraFeedBg"></div>
+          <div class="camera-feed-vignette"></div>
+
+          <!-- Flash da Câmera -->
+          <div class="camera-flash" id="cameraFlash"></div>
+          
+          <!-- Mira Delicada de Enquadramento Apple -->
+          <div class="camera-target-frame">
+            <div class="target-corner tl"></div>
+            <div class="target-corner tr"></div>
+            <div class="target-corner bl"></div>
+            <div class="target-corner br"></div>
+          </div>
+
+          <!-- Scanner de IA (Carregamento / Análise) -->
+          <div class="ai-scanner-overlay" id="aiScannerOverlay">
+            <div class="scanner-laser"></div>
+            <div class="ai-loading-box">
+              <div class="apple-spinner"></div>
+              <span>Validando com IA...</span>
+            </div>
+          </div>
+
+          <!-- Card de Aprovação Estilo Apple Face ID / Apple Pay HUD -->
+          <div class="ai-success-hud" id="aiSuccessOverlay">
+            <div class="apple-pay-check-circle">
+              <svg class="check-svg" viewBox="0 0 52 52">
+                <circle class="check-circle-bg" cx="26" cy="26" r="23" fill="none" />
+                <path class="check-check-path" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+              </svg>
+            </div>
+            <span class="success-title">Foto Aprovada</span>
+          </div>
+        </div>
+
+        <!-- Rodapé Apple: Botão Expandir na Esquerda e Shutter Apple no Centro -->
+        <div class="cam-bottom-overlay">
+          <div class="cam-bottom-side">
+            <button type="button" class="cam-glass-action-btn" id="btnToggleFramedView" title="Expandir / Reduzir Visor">
+              <i class="bi bi-arrows-angle-contract" id="iconFrameToggle"></i>
+            </button>
+          </div>
+
+          <div class="cam-bottom-center">
+            <!-- Botão de Fotografar Apple Shutter Duplo Anel -->
+            <button type="button" class="apple-shutter-btn" id="btnCaptureMock" title="Fotografar">
+              <div class="shutter-inner-core">
+                <i class="bi bi-camera-fill"></i>
+              </div>
+            </button>
+          </div>
+
+          <div class="cam-bottom-side spacer"></div>
+        </div>
+
+        <!-- Pop-up Modal de Instrução da Foto com Exemplo em Moldura de 200px -->
+        <div class="photo-guide-modal active" id="photoGuideModal">
+          <div class="guide-modal-backdrop"></div>
+          <div class="guide-modal-card">
+            
+            <!-- Moldura Arredondada com Imagem de Exemplo da Foto (~200px de altura) -->
+            <div class="guide-preview-frame">
+              <img src="" alt="Exemplo da foto" class="guide-preview-img" id="guidePreviewImg" />
+              <div class="guide-preview-tag-badge">
+                <span id="guideStepTag">FOTO 1 DE 8</span>
+              </div>
+            </div>
+
+            <h3 class="guide-modal-title" id="guideModalTitle">Frente do Veículo</h3>
+            <p class="guide-modal-desc" id="guideModalDesc">Posicione-se a cerca de 2 metros de distância e enquadre toda a frente do carro com faróis e para-choque visíveis.</p>
+            
+            <div class="guide-tips-box">
+              <div class="tip-item"><i class="bi bi-check-circle-fill"></i><span>Placa totalmente legível e limpa</span></div>
+              <div class="tip-item"><i class="bi bi-check-circle-fill"></i><span>Veículo inteiro dentro do visor</span></div>
+            </div>
+
+            <!-- Botão com Countdown que enche de verde da esquerda pra direita -->
+            <button type="button" class="btn-countdown-dismiss" id="btnGuideDismiss">
+              <div class="countdown-fill" id="countdownFill"></div>
+              <span class="countdown-text" id="countdownText">
+                <span>Entendido</span>
+                <span class="countdown-counter" id="countdownCounter">(3s)</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==========================================
+           ETAPA: Resumo e Revisão de Todas as Fotos
+           ========================================== -->
+      <section class="scene scene-card-stage" id="sceneReview">
+        <div class="stage-header-minimal">
+          <h2 class="stage-title">Fotos realizadas</h2>
+        </div>
+
+        <div class="photos-review-scroll-container">
+          <div class="photos-cards-list" id="reviewPhotosList">
+            <!-- Cards de Fotos com número Montserrat Light cinza claro -->
+          </div>
+        </div>
+
+        <div class="stage-footer">
+          <button type="button" class="vysion-btn btn-opal-primary" id="btnProsseguirReview">
+            <span>Concluir Vistoria</span>
+            <i class="bi bi-check-lg"></i>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js?v=50.0"></script>
+</body>
+</html>
