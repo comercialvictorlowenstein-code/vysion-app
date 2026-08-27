@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
     reveal: document.getElementById('sceneReveal'),
     workspace: document.getElementById('sceneWorkspace'),
     review: document.getElementById('sceneReview'),
+    transitionAssinar: document.getElementById('sceneTransitionAssinar'),
+    documentos: document.getElementById('sceneDocumentos'),
+    transitionAgoraAssinar: document.getElementById('sceneTransitionAgoraAssinar'),
+    assinatura: document.getElementById('sceneAssinatura'),
+    perfeito: document.getElementById('scenePerfeito'),
   };
 
   const topbar = document.getElementById('vysionTopbar');
@@ -38,6 +43,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Elementos da Tela de Revisão de Fotos
   const reviewPhotosList = document.getElementById('reviewPhotosList');
   const btnProsseguirReview = document.getElementById('btnProsseguirReview');
+
+  // Elementos da Tela de Documentação Multi-documentos
+  const docCounterTag = document.getElementById('docCounterTag');
+  const documentPaperContent = document.getElementById('documentPaperContent');
+  const btnNextDocument = document.getElementById('btnNextDocument');
+  const btnNextDocumentText = document.getElementById('btnNextDocumentText');
+  const btnNextDocumentIcon = document.getElementById('btnNextDocumentIcon');
+
+  // Elementos da Tela de Assinatura & Conclusão
+  const signatureCanvas = document.getElementById('signatureCanvas');
+  const btnClearSignature = document.getElementById('btnClearSignature');
+  const btnConfirmSignature = document.getElementById('btnConfirmSignature');
+  const btnFinalizarTudo = document.getElementById('btnFinalizarTudo');
 
   // Elementos do Viewfinder da Câmera
   const cameraStage = document.getElementById('cameraStage');
@@ -68,6 +86,56 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentPhotoStep = 0;
   let isCapturing = false;
   let countdownTimer = null;
+
+  // Estado de Documentos e Assinatura
+  let currentDocIndex = 0;
+  let hasSigned = false;
+  let isDrawing = false;
+  let sigCtx = null;
+
+  // Base de Dados de Documentos (Multi-documentos dinâmicos)
+  const legalDocuments = [
+    {
+      title: 'Termo de Vistoria Veicular Digital',
+      badge: 'Documento 1 de 2',
+      body: `
+        <h3>Termo de Vistoria e Conformidade</h3>
+        <p>Pelo presente instrumento, o vistoriador e o proprietário declaram que todas as fotografias e dados coletados nesta data refletem com exatidão o estado real de conservação e identificação do veículo vistoriado.</p>
+        
+        <div class="document-clause-box">
+          <strong>Cláusula 1ª — Da Autenticidade</strong>
+          <p>As fotos foram capturadas e validadas por inteligência artificial com geolocalização e data-hora atestadas em tempo real.</p>
+        </div>
+
+        <div class="document-clause-box">
+          <strong>Cláusula 2ª — Da Integridade</strong>
+          <p>Declaro não haver adulterações, ocultação de danos ou substituição de peças no momento das capturas.</p>
+        </div>
+      `,
+      buttonText: 'Próximo documento',
+      buttonIcon: 'bi-arrow-right'
+    },
+    {
+      title: 'Declaração de Responsabilidade & Aceite',
+      badge: 'Documento 2 de 2',
+      body: `
+        <h3>Declaração de Responsabilidade</h3>
+        <p>Declaro, sob as penas da lei, que as informações cadastrais fornecidas (Nome, CPF, Placa e Contato) são verdadeiras e correspondem aos dados do condutor/responsável pelo veículo.</p>
+        
+        <div class="document-clause-box">
+          <strong>Cláusula 3ª — Assinatura Eletrônica</strong>
+          <p>Fica acordado o aceite dos termos através de assinatura manuscrita digital com validade jurídica perante o laudo VYSION.</p>
+        </div>
+
+        <div class="document-clause-box">
+          <strong>Cláusula 4ª — Proteção de Dados (LGPD)</strong>
+          <p>Os dados coletados serão utilizados exclusivamente para finalidade de auditoria e geração do laudo cautelar veicular.</p>
+        </div>
+      `,
+      buttonText: 'Concordar e prosseguir',
+      buttonIcon: 'bi-check2-circle'
+    }
+  ];
 
   // --------------------------------------------------------------------------
   // 2. BASE DE DADOS DOS PASSOS DA VISTORIA COM IMAGENS REAIS
@@ -287,6 +355,18 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (sceneName === 'review') {
       renderPhotosReview();
     }
+    else if (sceneName === 'transitionAssinar') {
+      autoAdvanceTimer = setTimeout(() => {
+        goToScene('documentos');
+        renderDocument(0);
+      }, 2000);
+    }
+    else if (sceneName === 'transitionAgoraAssinar') {
+      autoAdvanceTimer = setTimeout(() => {
+        goToScene('assinatura');
+        setTimeout(initSignatureCanvas, 100);
+      }, 2000);
+    }
   }
 
   function updateStepProgress(sceneName) {
@@ -299,8 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (sceneName === 'workspace') {
       activeIndex = 2;
     } 
-    // 3. Revisão
-    else if (sceneName === 'review') {
+    // 3. Revisão & Assinatura
+    else if (sceneName === 'review' || sceneName === 'transitionAssinar' || sceneName === 'documentos' || sceneName === 'transitionAgoraAssinar' || sceneName === 'assinatura' || sceneName === 'perfeito') {
       activeIndex = 3;
     }
 
@@ -514,13 +594,144 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --------------------------------------------------------------------------
-  // 9. CONCLUSÃO DA VISTORIA NA REVISÃO DAS FOTOS
+  // 9. TRANSIÇÃO PÓS-REVISÃO -> FLUXO DE DOCUMENTAÇÃO E ASSINATURA
   // --------------------------------------------------------------------------
   btnProsseguirReview?.addEventListener('click', () => {
     playTapSound();
+    goToScene('transitionAssinar');
+  });
+
+  // --------------------------------------------------------------------------
+  // 10. MOTOR DE DOCUMENTAÇÃO MULTI-DOCUMENTOS
+  // --------------------------------------------------------------------------
+  function renderDocument(index) {
+    const doc = legalDocuments[index] || legalDocuments[0];
+    currentDocIndex = index;
+    if (docCounterTag) docCounterTag.textContent = doc.badge;
+    if (documentPaperContent) documentPaperContent.innerHTML = doc.body;
+    if (btnNextDocumentText) btnNextDocumentText.textContent = doc.buttonText;
+    if (btnNextDocumentIcon) btnNextDocumentIcon.className = `bi ${doc.buttonIcon}`;
+    
+    // Rola o documento de volta ao topo com suavidade
+    const scrollCard = document.querySelector('.document-scroll-card');
+    if (scrollCard) scrollCard.scrollTop = 0;
+  }
+
+  btnNextDocument?.addEventListener('click', () => {
+    playTapSound();
+    if (currentDocIndex < legalDocuments.length - 1) {
+      currentDocIndex++;
+      renderDocument(currentDocIndex);
+    } else {
+      goToScene('transitionAgoraAssinar');
+    }
+  });
+
+  // --------------------------------------------------------------------------
+  // 11. MOTOR DO CANVAS DE ASSINATURA DIGITAL APPLE
+  // --------------------------------------------------------------------------
+  function initSignatureCanvas() {
+    if (!signatureCanvas) return;
+    sigCtx = signatureCanvas.getContext('2d');
+    hasSigned = false;
+    if (btnConfirmSignature) btnConfirmSignature.disabled = true;
+
+    // Resolução Retina / Alta Densidade
+    const rect = signatureCanvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    signatureCanvas.width = rect.width * dpr;
+    signatureCanvas.height = rect.height * dpr;
+    sigCtx.scale(dpr, dpr);
+    sigCtx.lineCap = 'round';
+    sigCtx.lineJoin = 'round';
+    sigCtx.lineWidth = 3.2;
+    sigCtx.strokeStyle = '#1d1d1f';
+
+    let lastX = 0;
+    let lastY = 0;
+
+    function getPos(e) {
+      const b = signatureCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - b.left,
+        y: clientY - b.top
+      };
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      const pos = getPos(e);
+      lastX = pos.x;
+      lastY = pos.y;
+      sigCtx.beginPath();
+      sigCtx.moveTo(lastX, lastY);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pos = getPos(e);
+      sigCtx.quadraticCurveTo(lastX, lastY, (lastX + pos.x) / 2, (lastY + pos.y) / 2);
+      sigCtx.stroke();
+      lastX = pos.x;
+      lastY = pos.y;
+
+      if (!hasSigned) {
+        hasSigned = true;
+        if (btnConfirmSignature) btnConfirmSignature.disabled = false;
+      }
+    }
+
+    function stopDraw() {
+      if (!isDrawing) return;
+      isDrawing = false;
+      sigCtx.closePath();
+    }
+
+    signatureCanvas.onmousedown = startDraw;
+    signatureCanvas.onmousemove = draw;
+    signatureCanvas.onmouseup = stopDraw;
+    signatureCanvas.onmouseleave = stopDraw;
+
+    signatureCanvas.ontouchstart = (e) => {
+      e.preventDefault();
+      startDraw(e);
+    };
+    signatureCanvas.ontouchmove = (e) => {
+      e.preventDefault();
+      draw(e);
+    };
+    signatureCanvas.ontouchend = (e) => {
+      e.preventDefault();
+      stopDraw();
+    };
+    signatureCanvas.ontouchcancel = (e) => {
+      e.preventDefault();
+      stopDraw();
+    };
+  }
+
+  btnClearSignature?.addEventListener('click', () => {
+    playTapSound();
+    if (!signatureCanvas || !sigCtx) return;
+    const dpr = window.devicePixelRatio || 1;
+    sigCtx.clearRect(0, 0, signatureCanvas.width / dpr, signatureCanvas.height / dpr);
+    hasSigned = false;
+    if (btnConfirmSignature) btnConfirmSignature.disabled = true;
+  });
+
+  btnConfirmSignature?.addEventListener('click', () => {
+    if (!hasSigned) return;
     playApprovalSound();
-    triggerHaptic([20, 40, 20]);
-    alert('✨ Vistoria Concluída com Sucesso!\n\nTodas as fotos foram auditadas e aprovadas pelo sistema VYSION.');
+    triggerHaptic([20, 50, 20]);
+    goToScene('perfeito');
+  });
+
+  btnFinalizarTudo?.addEventListener('click', () => {
+    playTapSound();
+    startFlow();
   });
 
   btnRestartFlow?.addEventListener('click', () => {

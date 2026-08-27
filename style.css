@@ -1488,3 +1488,253 @@ body {
 .photo-card-check-action:active {
   transform: scale(0.92);
 }
+
+/* --------------------------------------------------------------------------
+   15. CENA DE DOCUMENTAÇÃO & LEITURA MULTI-DOCUMENTO
+   -------------------------------------------------------------------------- */
+.doc-counter-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #8e8e93;
+  margin-top: 4px;
+}
+
+.document-scroll-card {
+  flex: 1;
+  background: #ffffff !important;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.05),
+    0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  padding: 20px 18px;
+  margin: 6px 0 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+.document-scroll-card::-webkit-scrollbar {
+  width: 5px;
+}
+
+.document-scroll-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.document-scroll-card::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 9999px;
+}
+
+.document-paper-content {
+  color: #1d1d1f;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.document-paper-content h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.document-paper-content p {
+  color: #424245;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.document-clause-box {
+  background: #f5f5f7;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.document-clause-box strong {
+  display: block;
+  font-size: 12px;
+  color: #1d1d1f;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.document-clause-box p {
+  margin: 0;
+  font-size: 12.5px;
+  color: #636366;
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   16. CENA DE ASSINATURA DIGITAL (CANVAS INTERATIVO APPLE)
+   -------------------------------------------------------------------------- */
+.signature-card-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 6px 0 16px;
+}
+
+.signature-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  background: #ffffff !important;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.07) !important;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.05),
+    0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  touch-action: none;
+}
+
+.signature-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.signature-baseline-guide {
+  position: absolute;
+  bottom: 50px;
+  left: 24px;
+  right: 24px;
+  border-bottom: 1.5px dashed rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.signature-baseline-guide span {
+  position: relative;
+  bottom: -18px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #aeaeb2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.signature-clear-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #f5f5f7;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #636366;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.2s, transform 0.2s;
+  z-index: 10;
+}
+
+.signature-clear-btn:hover {
+  background: #e5e5ea;
+  color: #1d1d1f;
+  transform: scale(1.04);
+}
+
+.signature-clear-btn:active {
+  transform: scale(0.96);
+}
+
+.vysion-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   17. CENA DE CONCLUSÃO TRIUNFAL ("Perfeito!")
+   -------------------------------------------------------------------------- */
+.success-celebration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+.celebration-badge-wrap {
+  margin-bottom: 24px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.celebration-badge-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #34c759;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 46px;
+  box-shadow: 
+    0 16px 40px rgba(52, 199, 89, 0.35),
+    0 4px 12px rgba(52, 199, 89, 0.2),
+    inset 0 2px 3px rgba(255, 255, 255, 0.6);
+  animation: celebrationPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes celebrationPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-20deg);
+  }
+  70% {
+    transform: scale(1.12) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.celebration-title {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 44px !important;
+  font-weight: 600 !important;
+  color: #1d1d1f !important;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.celebration-subtitle {
+  font-size: 15px;
+  color: #636366;
+  max-width: 280px;
+  line-height: 1.45;
+  margin-bottom: 32px;
+}
+
+.celebration-actions {
+  width: 100%;
+  max-width: 320px;
+}
