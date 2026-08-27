@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
     goToScene('reveal');
   });
 
-  // Modal de Instruções com Countdown de 3s (Preenchimento Verde da Esquerda pra Direita)
+  // Modal de Instruções com Barra Verde Suave e Clique Imediato Permitido
   function showPhotoGuide(index) {
     const step = photoSteps[index] || photoSteps[0];
     if (!photoGuideModal) return;
@@ -425,15 +425,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (guideModalTitle) guideModalTitle.textContent = step.title;
     if (guideModalDesc) guideModalDesc.textContent = step.desc;
 
-    // Reseta preenchimento verde do botão
+    // Botão sempre habilitado para clique imediato
+    if (btnGuideDismiss) btnGuideDismiss.disabled = false;
+
+    // Reseta e anima a barra verde suave de 3s
     if (countdownFill) {
       countdownFill.style.transition = 'none';
       countdownFill.style.width = '0%';
     }
-
-    let timeLeft = 3;
-    if (countdownCounter) countdownCounter.textContent = `(${timeLeft}s)`;
-    if (btnGuideDismiss) btnGuideDismiss.disabled = true;
 
     photoGuideModal.classList.add('active');
 
@@ -444,23 +443,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, 50);
 
-    if (countdownTimer) clearInterval(countdownTimer);
-    countdownTimer = setInterval(() => {
-      timeLeft--;
-      if (countdownCounter) {
-        if (timeLeft > 0) {
-          countdownCounter.textContent = `(${timeLeft}s)`;
-        } else {
-          countdownCounter.textContent = '';
-        }
-      }
-
-      if (timeLeft <= 0) {
-        clearInterval(countdownTimer);
-        countdownTimer = null;
-        if (btnGuideDismiss) btnGuideDismiss.disabled = false;
-      }
-    }, 1000);
+    if (countdownTimer) {
+      clearTimeout(countdownTimer);
+      countdownTimer = null;
+    }
   }
 
   function hidePhotoGuide() {
