@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Elementos do Viewfinder da Câmera
   const cameraStage = document.getElementById('cameraStage');
+  const cameraVideoFeed = document.getElementById('cameraVideoFeed');
   const cameraFeedBg = document.getElementById('cameraFeedBg');
   const cameraFlash = document.getElementById('cameraFlash');
   const aiScannerOverlay = document.getElementById('aiScannerOverlay');
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentPhotoStep = 0;
   let isCapturing = false;
   let countdownTimer = null;
+  let activeMediaStream = null;
 
   // Estado de Documentos e Assinatura
   let currentDocIndex = 0;
@@ -324,11 +326,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateStepProgress(sceneName);
 
-    // Ajuste da Topbar
+    // Ajuste da Topbar e Câmera
     if (sceneName === 'workspace') {
       topbar?.classList.add('is-camera-mode');
+      startCameraStream();
     } else {
       topbar?.classList.remove('is-camera-mode');
+      stopCameraStream();
     }
 
     // Regras automáticas por cena
@@ -395,6 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentPhotoStep = 0;
     isCapturing = false;
     hidePhotoGuide();
+    stopCameraStream();
     Object.values(scenes).forEach(s => {
       if (s) s.classList.remove('active', 'exiting');
     });
@@ -473,8 +478,47 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --------------------------------------------------------------------------
-  // 7. MOTOR DA CÂMERA
+  // 7. MOTOR DA CÂMERA (STREAM WEBRTC REAL & CAPTURA)
   // --------------------------------------------------------------------------
+  async function startCameraStream() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+    try {
+      if (activeMediaStream) {
+        stopCameraStream();
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        },
+        audio: false
+      });
+      activeMediaStream = stream;
+      if (cameraVideoFeed) {
+        cameraVideoFeed.srcObject = stream;
+        cameraVideoFeed.classList.add('active');
+        cameraVideoFeed.play().catch(() => {});
+      }
+    } catch (err) {
+      console.warn('Permissão de câmera não concedida ou indisponível:', err);
+      if (cameraVideoFeed) {
+        cameraVideoFeed.classList.remove('active');
+      }
+    }
+  }
+
+  function stopCameraStream() {
+    if (activeMediaStream) {
+      activeMediaStream.getTracks().forEach(track => track.stop());
+      activeMediaStream = null;
+    }
+    if (cameraVideoFeed) {
+      cameraVideoFeed.srcObject = null;
+      cameraVideoFeed.classList.remove('active');
+    }
+  }
+
   function renderPhotoStep(index) {
     const step = photoSteps[index] || photoSteps[0];
     if (workspaceStepTitle) workspaceStepTitle.textContent = step.title;
@@ -502,6 +546,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     playShutterSound();
     triggerHaptic([25]);
+
+    // Captura o frame real da câmera se disponível
+    const currentStepObj = photoSteps[currentPhotoStep];
+    if (cameraVideoFeed && cameraVideoFeed.classList.contains('active') && cameraVideoFeed.videoWidth > 0) {
+      try {
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = cameraVideoFeed.videoWidth;
+        offCanvas.height = cameraVideoFeed.videoHeight;
+        const offCtx = offCanvas.getContext('2d');
+        offCtx.drawImage(cameraVideoFeed, 0, 0, offCanvas.width, offCanvas.height);
+        currentStepObj.capturedImage = offCanvas.toDataURL('image/jpeg', 0.88);
+      } catch (e) {
+        currentStepObj.capturedImage = currentStepObj.image;
+      }
+    } else {
+      currentStepObj.capturedImage = currentStepObj.image;
+    }
 
     cameraFlash.classList.add('flash-active');
     setTimeout(() => { cameraFlash.classList.remove('flash-active'); }, 80);
@@ -549,12 +610,14 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'photo-review-card';
       card.style.setProperty('--item-index', idx);
 
+      const displayImg = step.capturedImage || step.image;
+
       card.innerHTML = `
         <div class="photo-card-prefix-col">
           <span class="prefix-num">${stepNumbers[idx] || (idx + 1)}</span>
         </div>
         <div class="photo-card-thumb-wrap">
-          <img src="${step.image}" alt="${step.title}" class="photo-card-thumb-img" />
+          <img src="${displayImg}" alt="${step.title}" class="photo-card-thumb-img" />
         </div>
         <div class="photo-card-body">
           <h4 class="photo-card-title">${step.title}</h4>

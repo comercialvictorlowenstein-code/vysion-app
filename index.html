@@ -243,7 +243,10 @@
 
         <!-- Palco do Viewfinder da Câmera (Visor Limpo) -->
         <div class="fullscreen-viewfinder" id="cameraStage">
-          <!-- Feed de Imagem Realista de Recife / Veículo -->
+          <!-- Feed de Vídeo da Câmera Real do Dispositivo (WebRTC) -->
+          <video id="cameraVideoFeed" class="camera-video-feed" autoplay playsinline muted></video>
+          
+          <!-- Fallback de Imagem Realista de Veículo -->
           <div class="camera-feed-bg" id="cameraFeedBg"></div>
           <div class="camera-feed-vignette"></div>
 
